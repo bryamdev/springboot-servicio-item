@@ -20,7 +20,7 @@ public class ItemServiceFeignImpl implements ItemService {
 	public List<Item> findAll() {
 		return clienteFeign.listar()
 				.stream()
-				.map( prod -> new Item( prod, 8) )
+				.map( prod -> new Item( prod, 1) )
 				.collect(Collectors.toList());
 	}
 
