@@ -32,8 +32,15 @@ public class AppConfig {
 							.failureRateThreshold(50)
 							.waitDurationInOpenState(Duration.ofSeconds(10))
 							.permittedNumberOfCallsInHalfOpenState(5)
+							//Porcentaje umbral de falla en peticiones lentas
+							.slowCallRateThreshold(50)
+							//tiempo para que una peticion sea tomada como lenta
+							.slowCallDurationThreshold(Duration.ofSeconds(2L))
 							.build())
-					.timeLimiterConfig(TimeLimiterConfig.ofDefaults())
+					.timeLimiterConfig(TimeLimiterConfig.custom()
+							//Duracion maxima para que una peticion sea tomada como time out
+							.timeoutDuration(Duration.ofSeconds(6L))
+							.build())
 					.build();
 		});
 	}
