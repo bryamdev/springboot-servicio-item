@@ -1,13 +1,20 @@
 package com.micro.springboot.app.item.controllers;
 
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
+import org.springframework.core.env.Environment;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -24,10 +31,17 @@ import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.timelimiter.annotation.TimeLimiter;
 
 @RestController
-public class ItemController {
+public class ItemController{
 
 	
-	private final Logger log = LoggerFactory.getLogger(getClass());
+	private final Logger log = LoggerFactory.getLogger(ItemController.class);
+	
+	//Trae la config del archivo properties del microsevicio del servidor de configuracion
+	@Value("${configuracion.texto}")
+	private String texto;
+	
+	@Autowired
+	private Environment env;
 	
 	@SuppressWarnings("rawtypes")
 	@Autowired
@@ -36,6 +50,7 @@ public class ItemController {
 	@Autowired
 	@Qualifier("serviceFeign")
 	private ItemService itemService;
+	
 	
 	@GetMapping("/listar")
 	public List<Item> listar(@RequestParam(name = "usuario", required = false) String usuario, @RequestHeader(name = "token-request", required = false) String token){
@@ -105,6 +120,38 @@ public class ItemController {
 		item.setProducto(producto);
 		
 		return CompletableFuture.supplyAsync( () -> item );		
+	}
+	
+	//Handler que retorna config del microservicio del server config
+	//Se realiza inyeccion de valor '@Value' desde la config del server config
+	@GetMapping("/obtener-config")
+	public ResponseEntity<?> obtenerConfig(){
+		
+		//log.info("texto: " + texto);
+		String selectedProfile = "dev";		
+		String puerto = env.getProperty("server.port");
+		
+		//Se recorren los perfiles activos para evaluar si esta presente el seleccionado
+		Boolean profileMatched = Arrays.asList(env.getActiveProfiles())
+									.stream()
+									.filter( profile -> profile.equalsIgnoreCase(selectedProfile))
+									.findAny()
+									.isPresent();
+		
+		Map<String, String> resJson = new HashMap<>();
+		resJson.put("texto", texto);
+		resJson.put("puerto", puerto);
+		
+		if(env == null) {
+			resJson.put("error", "environment null");
+		}else {
+			if(env.getActiveProfiles().length > 0 && profileMatched) {
+				resJson.put("autor.nombre", env.getProperty("configuracion.autor.nombre"));
+				resJson.put("autor.correo", env.getProperty("configuracion.autor.correo"));
+			}			
+		}
+
+		return new ResponseEntity<Map<String, String>>(resJson, HttpStatus.OK);
 	}
 	
 }
