@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,10 +31,11 @@ import io.github.resilience4j.bulkhead.annotation.Bulkhead.Type;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.timelimiter.annotation.TimeLimiter;
 
+//RefreshScope permite actualizar componentes de spring que tienen inyeccion con @Value o el environment
+@RefreshScope
 @RestController
 public class ItemController{
 
-	
 	private final Logger log = LoggerFactory.getLogger(ItemController.class);
 	
 	//Trae la config del archivo properties del microsevicio del servidor de configuracion
