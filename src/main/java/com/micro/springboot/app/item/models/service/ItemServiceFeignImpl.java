@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.micro.springboot.app.item.clients.ProductoClientRest;
 import com.micro.springboot.app.item.models.Item;
-import com.micro.springboot.app.item.models.Producto;
+import com.micro.springboot.app.commons.models.entity.Producto;
 
 @Service("serviceFeign")
 public class ItemServiceFeignImpl implements ItemService {

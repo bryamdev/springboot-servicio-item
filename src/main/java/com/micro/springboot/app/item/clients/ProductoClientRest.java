@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import com.micro.springboot.app.item.models.Producto;
+import com.micro.springboot.app.commons.models.entity.Producto;
 
 //@FeignClient(name = "servicio-productos", url = "localhost:8001") <- para cliente feign
 @FeignClient(name = "servicio-productos")

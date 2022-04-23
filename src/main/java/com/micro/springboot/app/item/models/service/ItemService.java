@@ -2,7 +2,7 @@ package com.micro.springboot.app.item.models.service;
 
 import java.util.List;
 import com.micro.springboot.app.item.models.Item;
-import com.micro.springboot.app.item.models.Producto;
+import com.micro.springboot.app.commons.models.entity.Producto;
 
 public interface ItemService {
 	

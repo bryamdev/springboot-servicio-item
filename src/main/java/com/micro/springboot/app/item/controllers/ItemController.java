@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.micro.springboot.app.item.models.Item;
-import com.micro.springboot.app.item.models.Producto;
+import com.micro.springboot.app.commons.models.entity.Producto;
 import com.micro.springboot.app.item.models.service.ItemService;
 
 import io.github.resilience4j.bulkhead.annotation.Bulkhead;
